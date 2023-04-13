@@ -15,6 +15,17 @@ class App extends React.Component {
     this.state = {
       loggedIn: false,
     }
+    this.handleLogin = this.handleLogin.bind(this)
+  }
+
+  componentDidMount() {
+    // later, we'll need to check the user's token here, too!
+  }
+  handleLogin(e) {
+    e.preventDefault()
+    this.setState({
+      loggedIn: true,
+    })
   }
 
   render() {
@@ -41,7 +52,7 @@ class App extends React.Component {
               <Register />
             </Route>
             <Route path="/login">
-              <Login />
+              <Login handleLogin={this.handleLogin} />
             </Route>
           </Switch>
         </main>
