@@ -6,7 +6,7 @@ export const register = (username, password, email) => {
   return fetch(`${BASE_URL}/auth/local/register`, {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ username, password, email }),
@@ -38,4 +38,18 @@ export const authorize = (identifier, password) => {
         return // we need to do this to avoid ESLint errors
       }
     })
+}
+
+//  verify token and retrieve our user's data
+export const checkToken = (token) => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => data)
 }

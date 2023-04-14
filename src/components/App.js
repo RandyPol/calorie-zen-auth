@@ -7,6 +7,7 @@ import Register from './Register'
 import Login from './Login'
 import NavBar from './NavBar'
 import ProtectedRoute from './ProtectedRoute'
+import * as auth from '../auth.js'
 import './styles/App.css'
 
 class App extends React.Component {
@@ -15,17 +16,44 @@ class App extends React.Component {
     this.state = {
       loggedIn: false,
     }
+    this.handleTokenCheck = this.handleTokenCheck.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
   }
 
   componentDidMount() {
     // later, we'll need to check the user's token here, too!
+
+    this.handleTokenCheck()
   }
   handleLogin(e) {
     e.preventDefault()
     this.setState({
       loggedIn: true,
     })
+  }
+
+  handleTokenCheck() {
+    // if the user has a token in localStorage,
+    // this function will check that the user has a valid token
+    const jwt = localStorage.getItem('jwt')
+    if (jwt) {
+      // we'll verify the token
+      auth.checkToken(jwt).then((res) => {
+        if (res) {
+          // we'll log the user in
+          this.setState(
+            {
+              loggedIn: true,
+            },
+            () => {
+              // we've also wrapped App.js with the withRouter HOC
+              // so we now have access to this method
+              this.props.history.push('/diary')
+            }
+          )
+        }
+      })
+    }
   }
 
   render() {
