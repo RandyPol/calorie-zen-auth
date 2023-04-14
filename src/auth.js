@@ -1,15 +1,13 @@
-// auth.js
-
 export const BASE_URL = 'https://api.nomoreparties.co'
 
-export const register = (username, password, email) => {
+export const register = (username, password, email, calGoal) => {
   return fetch(`${BASE_URL}/auth/local/register`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ username, password, email }),
+    body: JSON.stringify({ username, password, email, en_cal_goal: calGoal }),
   })
     .then((response) => {
       return response.json()
@@ -19,7 +17,6 @@ export const register = (username, password, email) => {
     })
     .catch((err) => console.log(err))
 }
-
 export const authorize = (identifier, password) => {
   return fetch(`${BASE_URL}/auth/local`, {
     method: 'POST',
@@ -33,14 +30,12 @@ export const authorize = (identifier, password) => {
     .then((data) => {
       if (data.user) {
         localStorage.setItem('jwt', data.jwt)
+
         return data
-      } else {
-        return // we need to do this to avoid ESLint errors
       }
     })
+    .catch((err) => console.log(err))
 }
-
-//  verify token and retrieve our user's data
 export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
