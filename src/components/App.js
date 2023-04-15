@@ -9,6 +9,7 @@ import NavBar from './NavBar'
 import ProtectedRoute from './ProtectedRoute'
 import * as auth from '../auth.js'
 import * as calData from '../data'
+import { AppContext } from './AppContext'
 import './styles/App.css'
 
 class App extends React.Component {
@@ -76,32 +77,36 @@ class App extends React.Component {
         <Header />
         <main className="content">
           {this.state.loggedIn && <NavBar handleLogout={this.handleLogout} />}
-          <Switch>
-            <ProtectedRoute
-              path="/diary"
-              calGoal={this.state.calGoal}
-              loggedIn={this.state.loggedIn}
-              component={Diary}
-            />
-            <ProtectedRoute
-              path="/tips"
-              loggedIn={this.state.loggedIn}
-              component={Tips}
-            />
-            <Route path="/register">
-              <Register />
-            </Route>
-            <Route path="/login">
-              <Login handleLogin={this.handleLogin} />
-            </Route>
-            <Route exact path="/">
-              {this.state.loggedIn ? (
-                <Redirect to="/diary" />
-              ) : (
-                <Redirect to="/login" />
-              )}
-            </Route>
-          </Switch>
+          <AppContext.Provider
+            value={{ state: this.state, handleLogin: this.handleLogin }}
+          >
+            <Switch>
+              <ProtectedRoute
+                path="/diary"
+                calGoal={this.state.calGoal}
+                loggedIn={this.state.loggedIn}
+                component={Diary}
+              />
+              <ProtectedRoute
+                path="/tips"
+                loggedIn={this.state.loggedIn}
+                component={Tips}
+              />
+              <Route path="/register">
+                <Register />
+              </Route>
+              <Route path="/login">
+                <Login handleLogin={this.handleLogin} />
+              </Route>
+              <Route exact path="/">
+                {this.state.loggedIn ? (
+                  <Redirect to="/diary" />
+                ) : (
+                  <Redirect to="/login" />
+                )}
+              </Route>
+            </Switch>
+          </AppContext.Provider>
         </main>
       </>
     )
