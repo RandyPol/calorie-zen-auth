@@ -19,6 +19,7 @@ class App extends React.Component {
     }
     this.handleLogin = this.handleLogin.bind(this)
     this.handleTokenCheck = this.handleTokenCheck.bind(this)
+    this.handleLogout = this.handleLogout.bind(this)
   }
 
   componentDidMount() {
@@ -62,17 +63,24 @@ class App extends React.Component {
     })
   }
 
+  handleLogout() {
+    // finish the log out handler
+    this.setState({
+      loggedIn: false,
+    })
+  }
+
   render() {
     return (
       <>
         <Header />
         <main className="content">
-          {this.state.loggedIn && <NavBar />}
+          {this.state.loggedIn && <NavBar handleLogout={this.handleLogout} />}
           <Switch>
             <ProtectedRoute
               path="/diary"
-              loggedIn={this.state.loggedIn}
               calGoal={this.state.calGoal}
+              loggedIn={this.state.loggedIn}
               component={Diary}
             />
             <ProtectedRoute
