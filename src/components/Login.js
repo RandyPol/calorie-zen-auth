@@ -1,9 +1,11 @@
 import React from 'react'
 import { Link, withRouter } from 'react-router-dom'
-import './styles/Login.css'
 import * as auth from '../auth.js'
+import { AppContext } from './AppContext.js' // added here
+import './styles/Login.css'
 
 class Login extends React.Component {
+  static contextType = AppContext;
   constructor(props) {
     super(props)
     this.state = {
@@ -22,6 +24,7 @@ class Login extends React.Component {
   }
 
   handleSubmit(e) {
+    const value = this.context //refer to the context
     e.preventDefault()
     // handle the log in here
     if (!this.state.username || !this.state.password) {
@@ -40,7 +43,7 @@ class Login extends React.Component {
               password: '',
             },
             () => {
-              this.props.handleLogin()
+              value.handleLogin() //update our code
               this.props.history.push('/diary')
             }
           )
